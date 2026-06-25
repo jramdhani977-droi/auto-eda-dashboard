@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto EDA Analytics Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    /* ── New Dashboard Design ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body.new-dash {
+      margin: 0;
+      padding: 0;
+      background: #f0f5f2;
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: #1a3a28;
+    }
+
+    /* Topbar */
+    .nd-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #d0e8d8;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nd-topbar-brand {
+      flex: 1;
+    }
+
+    .nd-topbar-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a3a28;
+    }
+
+    .nd-topbar-title span {
+      color: #27ae60;
+    }
+
+    .nd-topbar-sub {
+      font-size: 11px;
+      color: #6b9b7a;
+      margin-top: 2px;
+    }
+
+    .nd-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #4a5568;
+      background: #f7faf8;
+      border: 1px solid #d0e8d8;
+      border-radius: 20px;
+      padding: 5px 14px;
+    }
+
+    .nd-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #27ae60;
+      flex-shrink: 0;
+    }
+
+    .nd-status-dot.off {
+      background: #ccc;
+    }
+
+    .nd-user-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef7f2;
+      border: 1px solid #c8e6d4;
+      border-radius: 20px;
+      padding: 4px 10px 4px 4px;
+      cursor: pointer;
+    }
+
+    .nd-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #27ae60;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Main layout */
+    .nd-body {
+      display: flex;
+      min-height: calc(100vh - 49px);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .nd-sidebar {
+      width: 170px;
+      flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid #d0e8d8;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 0;
+    }
+
+    .nd-nav-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #a8d8bc;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 8px 16px 4px;
+    }
+
+    .nd-nav-item {
+      padding: 7px 16px;
+      font-size: 12px;
+      color: #4a5568;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nd-nav-item:hover {
+      background: #f0faf5;
+      color: #27ae60;
+    }
+
+    .nd-nav-item.active {
+      color: #27ae60;
+      border-left-color: #27ae60;
+      background: #f0faf5;
+      font-weight: 600;
+    }
+
+    .nd-nav-item.disabled {
+      color: #c8e6d4;
+      cursor: not-allowed;
+    }
+
+    .nd-nav-item .badge {
+      font-size: 9px;
+      background: #e8f5f0;
+      color: #27ae60;
+      padding: 1px 5px;
+      border-radius: 8px;
+      margin-left: auto;
+    }
+
+    .nd-sidebar-footer {
+      margin-top: auto;
+      padding: 12px 16px;
+      font-size: 10px;
+      color: #a8d8bc;
+      border-top: 1px solid #e8f5f0;
+    }
+
+    /* Content area */
+    .nd-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 12px 14px;
+      min-width: 0;
+    }
+
+    /* Upload + Stats row */
+    .nd-upload-stats-row {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .nd-upload-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #c8e6d4;
+      padding: 14px;
+    }
+
+    .nd-upload-area {
+      border: 2px dashed #7ecba0;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      color: #6b9b7a;
+      font-size: 11px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .nd-upload-area:hover {
+      background: #f0faf5;
+    }
+
+    .nd-upload-area i {
+      font-size: 22px;
+      color: #a8d8bc;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .nd-btn-browse {
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .nd-btn-browse:hover {
+      background: #219a52;
+    }
+
+    .nd-file-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0faf5;
+      border: 1px solid #b8e6cc;
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+
+    .nd-fp-icon {
+      background: #27ae60;
+      color: #fff;
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .nd-fp-name {
+      font-weight: 600;
+      color: #1a3a28;
+      font-size: 11px;
+    }
+
+    .nd-fp-meta {
+      color: #6b9b7a;
+      font-size: 10px;
+    }
+
+    .nd-loaded-badge {
+      background: #e8f5f0;
+      color: #27ae60;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    /* Stat cards */
+    .nd-stat-cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .nd-stat-card {
+      border-radius: 8px;
+      padding: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 76px;
+    }
+
+    .nd-sc-icon {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 4px;
+    }
+
+    .nd-sc-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .nd-sc-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 3px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .sc-navy {
+      background: #1e3a5f;
+    }
+
+    .sc-teal {
+      background: #0e6655;
+    }
+
+    .sc-purple {
+      background: #6c3483;
+    }
+
+    .sc-orange {
+      background: #a04000;
+    }
+
+    .sc-red {
+      background: #922b21;
+    }
+
+    /* Ensure anchor-scroll targets land below sticky topbar */
+    #nd-sec-stats,
+    #sec-stats,
+    #sec-viz,
+    #sec-insights,
+    #tsContent {
+      scroll-margin-top: 60px;
+    }
+
+    /* Panels */
+    .nd-panel {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #c8e6d4;
+      padding: 10px;
+    }
+
+    .nd-panel-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #1a3a28;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 3-col row */
+    .nd-three-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Tables */
+    .nd-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+
+    .nd-table th {
+      background: #f0faf5;
+      color: #6b9b7a;
+      font-weight: 600;
+      padding: 4px 6px;
+      text-align: left;
+      border-bottom: 1px solid #c8e6d4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80px;
+    }
+
+    .nd-table td {
+      padding: 3px 6px;
+      border-bottom: 1px solid #eef7f2;
+      color: #1a3a28;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80px;
+    }
+
+    .nd-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .nd-table td.not-normal {
+      color: #e74c3c;
+    }
+
+    .nd-table td.normal {
+      color: #27ae60;
+    }
+
+    /* View-all link */
+    .nd-view-all {
+      font-size: 11px;
+      color: #27ae60;
+      cursor: pointer;
+      margin-top: 6px;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .nd-view-all:hover {
+      text-decoration: underline;
+    }
+
+    /* Missing + quality 2-col */
+    .nd-two-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* DQ circle */
+    .nd-dq-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 6px;
+    }
+
+    .nd-dq-inner {
+      width: 46px;
+      height: 46px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Missing dot */
+    .nd-miss-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    /* Viz row - 5 columns */
+    .nd-viz-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    #db-viz-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 900px) {
+      #db-viz-preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .nd-viz-card {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #c8e6d4;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .nd-vc-title {
+      font-size: 9px;
+      font-weight: 600;
+      color: #6b9b7a;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .nd-chart-placeholder {
+      height: 110px;
+    }
+
+    /* Bottom row */
+    .nd-bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Insights */
+    .nd-insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #2d5a3d;
+    }
+
+    .nd-insight-item i {
+      color: #27ae60;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Action buttons */
+    .nd-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #c8e6d4;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-bottom: 6px;
+      background: #fff;
+      font-size: 11px;
+      color: #1a3a28;
+      transition: background 0.15s;
+    }
+
+    .nd-action-btn:hover {
+      background: #f0faf5;
+    }
+
+    .nd-action-btn i {
+      font-size: 18px;
+    }
+
+    .nd-action-btn.red i {
+      color: #e74c3c;
+    }
+
+    .nd-action-btn.green i {
+      color: #27ae60;
+    }
+
+    .nd-action-btn.blue i {
+      color: #1e8449;
+    }
+
+    .nd-action-btn.purple i {
+      color: #196f3d;
+    }
+
+    /* Activity */
+    .nd-activity-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid #eef7f2;
+      font-size: 11px;
+      color: #1a3a28;
+    }
+
+    .nd-activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .nd-activity-item i {
+      font-size: 14px;
+    }
+
+    .nd-ai-time {
+      margin-left: auto;
+      color: #a8d8bc;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    /* Section divider */
+    .nd-section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a3a28;
+      margin: 14px 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Upload success bar */
+    #uploadSuccessBar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      background: #d1fae5;
+      border-bottom: 1px solid #6ee7b7;
+    }
+
+    /* No data */
+    #no-data-msg {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    /* Analytics sections (reuse existing dashboard.html CSS via class "section") */
+    .nd-analytics {
+      margin-top: 20px;
+    }
+
+    .nd-analytics .section {
+      margin-top: 16px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 1100px) {
+      .nd-stat-cards {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .nd-upload-stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+
+      .nd-three-row,
+      .nd-bottom-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nd-sidebar {
+        display: none;
+      }
+    }
+
+    /* ── Dashboard viz preview grid ── */
+    #db-viz-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 900px) {
+      #db-viz-preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 580px) {
+      #db-viz-preview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @keyframes pulse {
+      from {
+        opacity: 0.6;
+      }
+
+      to {
+        opacity: 1.0;
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #db-viz-preview-grid .nd-viz-card {
+      min-height: 200px;
+    }
+  </style>
+</head>
+
+<body class="new-dash">
+
+  <!-- ══════════════════════════════ TOPBAR ══════════════════════════════ -->
+  <div class="nd-topbar">
+    <div class="nd-topbar-brand">
+      <div class="nd-topbar-title">Auto EDA <span>Analytics</span> Dashboard</div>
+      <div class="nd-topbar-sub">Data Science Programming · Bakti Siregar, M.Sc.</div>
+    </div>
+
+    <!-- Status pill — updates when file loaded -->
+    <div class="nd-status-pill" id="nd-status-pill">
+      <div class="nd-status-dot off" id="nd-status-dot"></div>
+      <span id="statusText">No file loaded</span>
+    </div>
+
+    <!-- User pill -->
+    <div class="nd-user-pill">
+      <div class="nd-avatar">K4</div>
+      <div style="font-size:11px">
+        <div style="font-weight:600;color:#1a3a28">Kelompok 4</div>
+      </div>
+      <i class="ti ti-chevron-down" style="font-size:12px;color:#6b9b7a"></i>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ BODY ══════════════════════════════ -->
+  <div class="nd-body">
+
+    <!-- ── Sidebar ── -->
+    <div class="nd-sidebar">
+      <div class="nd-nav-label">Navigation</div>
+      <div class="nd-nav-item" onclick="location.href='/'">
+        <i class="ti ti-home"></i> Main Dashboard
+      </div>
+      <div class="nd-nav-item" onclick="location.href='/upload-page'">
+        <i class="ti ti-upload"></i> Upload Data
+      </div>
+      <div class="nd-nav-item active">
+        <i class="ti ti-chart-bar"></i> Analytics
+      </div>
+      <div class="nd-nav-item" onclick="location.href='/report'">
+        <i class="ti ti-file-description"></i> Report
+      </div>
+
+      <div class="nd-nav-label">Jump To</div>
+      <div class="nd-nav-item" onclick="scrollToSec('nd-sec-stats')">
+        <i class="ti ti-table"></i> Statistics
+      </div>
+      <div class="nd-nav-item" onclick="scrollToSec('sec-viz')">
+        <i class="ti ti-chart-dots"></i> Visualizations
+      </div>
+      <div class="nd-nav-item" onclick="scrollToSec('sec-insights')">
+        <i class="ti ti-bulb"></i> Insights
+      </div>
+
+      <div class="nd-nav-label"></div>
+      <div class="nd-nav-item" onclick="scrollToSec('tsContent')">
+        <i class="ti ti-clock"></i> Time Series <span class="badge">M16</span>
+      </div>
+      <div class="nd-nav-item" onclick="location.href='/report'">
+        <i class="ti ti-brain"></i> Insights AI<span class="badge">M15</span>
+      </div>
+
+      <div class="nd-sidebar-footer">Final<br></div>
+    </div>
+
+    <!-- ── Main content ── -->
+    <div class="nd-content">
+
+      <!-- Upload success bar -->
+      <div id="uploadSuccessBar"
+        style="display:none;align-items:center;gap:10px;padding:8px 16px;background:#d1fae5;border-bottom:1px solid #6ee7b7;border-radius:8px;margin-bottom:10px;">
+        <span style="color:#065f46;font-size:12px;font-weight:600;"></span>
+        <span id="uploadSuccessMsg" style="color:#065f46;font-size:12px;"></span>
+      </div>
+
+      <!-- ── No data state ── -->
+      <div id="no-data-msg" style="text-align:center;padding:80px 20px;">
+        <i class="ti ti-folder-open" style="font-size:52px;color:#c8e6d4;display:block;margin-bottom:12px;"></i>
+        <div style="font-size:18px;font-weight:700;color:#1a3a28;margin-bottom:8px;">No Dataset Loaded</div>
+        <div style="color:#6b9b7a;margin-bottom:24px;">Upload a file to start the analysis.</div>
+        <button onclick="location.href='/upload-page'"
+          style="background:#27ae60;color:#fff;border:none;padding:10px 24px;border-radius:6px;cursor:pointer;font-size:14px;">
+          Upload Data →
+        </button>
+      </div>
+
+      <!-- ══════════════ POST-UPLOAD CONTENT ══════════════ -->
+      <div id="postUpload" class="hidden">
+
+        <!-- ── KPI row ── -->
+        <!-- File info pill (hidden, updated by JS) -->
+        <div class="nd-file-pill" id="nd-file-pill" style="margin-bottom:10px;display:none;">
+          <div class="nd-fp-icon"><i class="ti ti-file-spreadsheet"></i></div>
+          <div style="flex:1;">
+            <div class="nd-fp-name" id="nd-fp-name">—</div>
+            <div class="nd-fp-meta" id="nd-fp-meta">—</div>
+          </div>
+          <div class="nd-loaded-badge" id="nd-fp-badge">Loaded</div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <div>
+            <div class="nd-stat-cards" id="nd-stat-cards">
+              <div class="nd-stat-card sc-navy">
+                <div class="nd-sc-icon"><i class="ti ti-layout-grid"></i></div>
+                <div class="nd-sc-val" id="nd-kpi-rows">—</div>
+                <div class="nd-sc-label">Total Rows</div>
+              </div>
+              <div class="nd-stat-card sc-teal">
+                <div class="nd-sc-icon"><i class="ti ti-layout-columns"></i></div>
+                <div class="nd-sc-val" id="nd-kpi-cols">—</div>
+                <div class="nd-sc-label">Total Columns</div>
+              </div>
+              <div class="nd-stat-card sc-purple">
+                <div class="nd-sc-icon"><i class="ti ti-diamond"></i></div>
+                <div class="nd-sc-val" id="nd-kpi-num">—</div>
+                <div class="nd-sc-label">Numeric Cols</div>
+              </div>
+              <div class="nd-stat-card sc-orange">
+                <div class="nd-sc-icon"><i class="ti ti-layout-sidebar"></i></div>
+                <div class="nd-sc-val" id="nd-kpi-cat">—</div>
+                <div class="nd-sc-label">Categorical Cols</div>
+              </div>
+              <div class="nd-stat-card sc-red">
+                <div class="nd-sc-icon"><i class="ti ti-alert-triangle"></i></div>
+                <div class="nd-sc-val" id="nd-kpi-miss">—</div>
+                <div class="nd-sc-label">Missing Cells</div>
+              </div>
+            </div>
+            <!-- Quality bar (rendered by script.js) -->
+            <div id="qualityBar"
+              style="margin-top:8px;padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #c8e6d4;">
+            </div>
+          </div>
+
+          <!-- ── 3-col: Preview / Num Summary / Cat+Quality ── -->
+          <div class="nd-three-row" id="nd-sec-stats">
+            <!-- Data Preview -->
+            <div class="nd-panel">
+              <div class="nd-panel-title"><i class="ti ti-table" style="color:#27ae60"></i> Data Preview</div>
+              <div id="rawPreviewContent" style="overflow-x:auto;max-height:220px;overflow-y:auto;cursor:pointer;" onclick="scrollToSec('sec-stats')" title="Klik untuk lihat statistik lengkap"></div>
+              <a class="nd-view-all" onclick="scrollToSec('sec-stats')">View full statistics →</a>
+            </div>
+
+            <!-- Numerical Summary -->
+            <div class="nd-panel">
+              <div class="nd-panel-title"><i class="ti ti-math" style="color:#27ae60"></i> Numerical Summary</div>
+              <div style="overflow-x:auto;cursor:pointer;" onclick="scrollToSec('sec-stats')" title="Klik untuk lihat statistik lengkap">
+                <table id="db-num-summary" class="nd-table">
+                  <thead></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <a class="nd-view-all" onclick="scrollToSec('sec-stats')">View full statistics →</a>
+            </div>
+
+            <!-- Categorical + Missing + Quality -->
+            <div>
+              <div class="nd-panel" style="margin-bottom:10px;">
+                <div class="nd-panel-title"><i class="ti ti-tags" style="color:#27ae60"></i> Categorical Summary</div>
+                <div style="overflow-x:auto;cursor:pointer;" onclick="scrollToSec('sec-stats')" title="Klik untuk lihat statistik lengkap">
+                  <table id="db-cat-summary" class="nd-table">
+                    <thead></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="nd-two-mini">
+                <!-- Missing values mini -->
+                <div class="nd-panel">
+                  <div class="nd-panel-title" style="font-size:11px;margin-bottom:6px;">Missing Values</div>
+                  <div id="db-quality-bars" style="font-size:10px;"></div>
+                </div>
+                <!-- Data quality score -->
+                <div class="nd-panel" style="text-align:center;">
+                  <div class="nd-panel-title" style="font-size:11px;text-align:center;margin-bottom:6px;">Data Quality
+                  </div>
+                  <div class="nd-dq-circle" id="nd-dq-circle"
+                    style="background: conic-gradient(#27ae60 0% 0%, #d4eddf 0% 100%);">
+                    <div class="nd-dq-inner" id="db-quality-score" style="color:#27ae60;">—%</div>
+                  </div>
+                  <div id="db-quality-label" style="font-size:10px;color:#6b9b7a;margin-top:4px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Visualizations Preview (Auto-rendered) ── -->
+          <div class="nd-section-label" style="justify-content:space-between;">
+            <span style="display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-chart-bar" style="color:#27ae60"></i> Visualizations Preview
+            </span>
+            <a class="nd-view-all" style="font-size:11px;margin:0;" onclick="scrollToSec('sec-viz')">View all charts
+              →</a>
+          </div>
+          <!-- Dynamic viz grid — filled by JS renderDashboardCharts() -->
+          <div id="db-viz-preview-grid" class="thumb-grid" style="cursor:pointer;" onclick="scrollToSec('sec-viz')" title="Klik untuk lihat semua chart"></div>
+      
+            <!-- placeholder cards shown before charts load -->
+            <div class="nd-viz-card" style="grid-column:1/-1;text-align:center;padding:30px;color:#a8d8bc;">
+              <i class="ti ti-loader-2"
+                style="font-size:28px;display:block;margin-bottom:8px;animation:spin 1s linear infinite;"></i>
+              <div style="font-size:12px;">Loading chart preview…</div>
+            </div>
+          </div>
+          <style>
+            @keyframes spin {
+              from {
+                transform: rotate(0deg)
+              }
+
+              to {
+                transform: rotate(360deg)
+              }
+            }
+          </style>
+
+          <!-- ── Bottom row: Insights / Actions / Activity ── -->
+          <div class="nd-bottom-row" style="margin-bottom:20px;">
+            <!-- Auto Insights -->
+            <div class="nd-panel">
+              <div class="nd-panel-title">
+                <i class="ti ti-bulb" style="color:#f39c12"></i> Automatic Insights
+              </div>
+              <div id="db-insights-list"></div>
+              <a class="nd-view-all" onclick="scrollToSec('sec-insights')">View all insights →</a>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="nd-panel">
+              <div class="nd-panel-title">
+                <i class="ti ti-bolt" style="color:#27ae60"></i> Quick Actions
+              </div>
+              <div class="nd-action-btn red" onclick="location.href='/export-pdf'">
+                <i class="ti ti-file-type-pdf"></i> Download Export (PDF)
+              </div>
+              <div class="nd-action-btn green" onclick="location.href='/export-excel'">
+                <i class="ti ti-file-type-xls"></i> Export Data (Excel)
+              </div>
+              <div class="nd-action-btn purple" onclick="location.href='/export-csv'">
+                <i class="ti ti-file-text"></i> Export CSV
+              </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="nd-panel">
+              <div class="nd-panel-title">Recent Activity</div>
+              <div id="nd-activity-list">
+                <div class="nd-activity-item" style="color:#a8d8bc;font-size:11px;padding:8px 0;">
+                  No activity yet — upload a file to begin.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══════════ FULL ANALYTICS SECTIONS (existing script.js targets) ═══════════ -->
+          <div class="nd-analytics">
+
+            <!-- Descriptive Statistics -->
+            <div id="sec-stats" class="section">
+              <div class="section-header">
+                <span class="section-title">Descriptive Statistics</span>
+                <div class="section-line"></div>
+                <span class="section-tag">AUTO COMPUTED</span>
+              </div>
+              <div id="statsNumericContent" style="margin-bottom:12px;"></div>
+              <div id="statsCategoricalContent"></div>
+              <div id="statsContent"></div>
+            </div>
+
+            <!-- Raw Preview -->
+            <div class="section" style="margin-top:20px;">
+              <div class="section-header">
+                <span class="section-title">Raw Data Preview</span>
+                <div class="section-line"></div>
+                <span class="section-tag" style="background:#fef3c7;color:#92400e;">RAW</span>
+              </div>
+              <!-- rawPreviewContent already above; duplicate target handled by script.js guard -->
+              <div id="rawPreviewContentFull"></div>
+            </div>
+
+            <!-- Cleaned Preview (hidden) -->
+            <div style="display:none;">
+              <div id="previewContent"></div>
+              <div id="previewInfo"></div>
+            </div>
+
+            <!-- Type Detection -->
+            <div class="section" style="margin-top:20px;">
+              <div class="section-header">
+                <span class="section-title">Type Detection</span>
+                <div class="section-line"></div>
+                <span class="section-tag">AUTO DETECT</span>
+              </div>
+              <div id="typeSummaryBar"></div>
+              <div id="typesContent"></div>
+            </div>
+
+            <!-- Data Quality section removed per revision -->
+            <!-- qualityOverview and qualityContent kept hidden for script.js compatibility -->
+            <div style="display:none">
+              <div id="qualityOverview"></div>
+              <div id="qualityContent"></div>
+            </div>
+
+            <!-- Visualizations (full) -->
+            <div id="sec-viz" class="section" style="margin-top:20px;">
+              <div class="section-header">
+                <span class="section-title">Visualizations</span>
+                <div class="section-line"></div>
+                <span class="section-tag">M15 · ACTIVE</span>
+              </div>
+              <div id="vizTabs" style="display:none;gap:8px;flex-wrap:wrap;margin-bottom:12px;"></div>
+              <div id="vizContent">
+                <div
+                  style="text-align:center;padding:40px 20px;background:#f7faf8;border-radius:10px;border:2px dashed #27ae60;">
+                  <div style="font-size:18px;font-weight:700;color:#1a3a28;margin-bottom:8px;">Charts akan muncul di
+                    sini</div>
+                  <div style="color:#6b9b7a;font-size:13px;">Pilih tipe chart dari menu Visualizations di sidebar.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Auto Insights (full) -->
+            <div id="sec-insights" class="section" style="margin-top:20px;">
+              <div class="section-header">
+                <span class="section-title">Auto Insights</span>
+                <div class="section-line"></div>
+                <span class="section-tag">weeks 14</span>
+              </div>
+              <div id="insightsContent"></div>
+            </div>
+
+            <!-- Time Series -->
+            <div class="section" style="margin-top:20px;">
+              <div class="section-header">
+                <span class="section-title">Time Series</span>
+                <div class="section-line"></div>
+                <span class="section-tag">AUTO DETECTION</span>
+              </div>
+              <div id="tsContent"></div>
+            </div>
+
+            <!-- Report -->
+            <div class="section" style="margin-top:20px;">
+              <div class="section-header">
+                <span class="section-title">Report Summary</span>
+                <div class="section-line"></div>
+                <span class="section-tag">EXPORT</span>
+              </div>
+              <div id="reportContent"></div>
+            </div>
+
+          </div><!-- /nd-analytics -->
+
+        </div><!-- /postUpload -->
+
+        <!-- ══ Hidden elements required by script.js updateDashboardPreview ══ -->
+        <div style="display:none">
+          <span id="db-rows"></span>
+          <span id="db-cols"></span>
+          <span id="db-num"></span>
+          <span id="db-cat"></span>
+          <span id="db-quality"></span>
+          <div id="db-hero"></div>
+          <div id="db-quick-before"></div>
+          <div id="db-main"></div>
+          <div id="db-chart1-col"></div>
+          <div id="db-chart2-col"></div>
+          <div id="db-chart3-col"></div>
+        </div>
+
+        <!-- Hidden file info bar (script.js writes to this ID) -->
+        <div id="fileInfoBar" style="display:none;"></div>
+
+        <!-- Hidden KPI grid (script.js also writes here; we show our own nd-kpi-* above) -->
+        <div id="kpiGrid" style="display:none;"></div>
+
+      </div><!-- /nd-content -->
+    </div><!-- /nd-body -->
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay hidden" id="loadingOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;
+         display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <div
+        style="background:#fff;border-radius:12px;padding:32px 48px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+        <div style="font-size:32px;margin-bottom:12px;"></div>
+        <div class="loading-text" id="loadingText" style="font-size:14px;font-weight:600;color:#1e3a5f;">Processing...
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.json,.txt" style="display:none"
+      onchange="if(this.files[0]) handleFile(this.files[0])">
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+      /* ── Helper ── */
+      function scrollToSec(id) {
+        var el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      /* ── Sync new KPI cards from script.js data ── */
+      function syncNewKPIs(d) {
+        var fmt = function (n) { return (typeof n === 'number') ? n.toLocaleString('id-ID') : (n || '—'); };
+        var numCount = d.col_types ? Object.values(d.col_types).filter(function (t) { return t === 'numeric'; }).length : '—';
+        var catCount = d.col_types ? Object.values(d.col_types).filter(function (t) { return t === 'categorical'; }).length : '—';
+        var missCount = d.missing_cells != null ? d.missing_cells : '—';
+
+        var el;
+        el = document.getElementById('nd-kpi-rows'); if (el) el.textContent = fmt(d.total_rows);
+        el = document.getElementById('nd-kpi-cols'); if (el) el.textContent = fmt(d.total_cols);
+        el = document.getElementById('nd-kpi-num'); if (el) el.textContent = numCount;
+        el = document.getElementById('nd-kpi-cat'); if (el) el.textContent = catCount;
+        el = document.getElementById('nd-kpi-miss'); if (el) el.textContent = missCount + (d.quality_pct != null ? ' (' + (100 - d.quality_pct).toFixed(1) + '%)' : '');
+
+        /* Status pill */
+        var dot = document.getElementById('nd-status-dot');
+        var txt = document.getElementById('statusText');
+        if (dot) { dot.classList.remove('off'); }
+        if (txt && d.filename) txt.textContent = 'Data loaded — ' + d.filename;
+
+        /* File pill */
+        var fpName = document.getElementById('nd-fp-name');
+        var fpMeta = document.getElementById('nd-fp-meta');
+        var fpBadge = document.getElementById('nd-fp-badge');
+        var fpPill = document.getElementById('nd-file-pill');
+        if (fpName) fpName.textContent = d.filename || '—';
+        if (fpMeta) fpMeta.textContent = 'Rows: ' + fmt(d.total_rows) + '  Columns: ' + fmt(d.total_cols);
+        if (fpBadge) fpBadge.style.display = 'inline-block';
+        if (fpPill) fpPill.style.display = 'flex';
+
+        /* Data quality circle */
+        var qpct = d.quality_pct || 0;
+        var circle = document.getElementById('nd-dq-circle');
+        var scoreEl = document.getElementById('db-quality-score');
+        if (circle) {
+          var color = qpct >= 90 ? '#27ae60' : qpct >= 70 ? '#e07b39' : '#c94040';
+          circle.style.background = 'conic-gradient(' + color + ' 0% ' + qpct + '%, #d4eddf ' + qpct + '% 100%)';
+          if (scoreEl) { scoreEl.textContent = qpct + '%'; scoreEl.style.color = color; }
+        }
+
+        /* Activity log */
+        var actList = document.getElementById('nd-activity-list');
+        if (actList && d.filename) {
+          var now = new Date().toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+          actList.innerHTML = [
+            ['ti-file', '#27ae60', 'File <b>' + d.filename + '</b> uploaded', now],
+            ['ti-chart-histogram', '#1e8449', 'Descriptive statistics generated', now],
+            ['ti-chart-bar', '#52be80', 'Visualizations ready', now],
+          ].map(function (a) {
+            return '<div class="nd-activity-item">' +
+              '<i class="ti ' + a[0] + '" style="color:' + a[1] + '"></i>' +
+              '<span>' + a[2] + '</span>' +
+              '<span class="nd-ai-time">' + a[3] + '</span>' +
+              '</div>';
+          }).join('');
+        }
+      }
+
+      /* ── Patch handleFile success callback to also sync new UI ── */
+      (function () {
+        var _origHandleFile = window.handleFile;
+        if (typeof _origHandleFile !== 'function') {
+          /* script.js not loaded yet — wait for DOMContentLoaded */
+          document.addEventListener('DOMContentLoaded', function () {
+            patchHandleFile();
+          });
+        } else {
+          patchHandleFile();
+        }
+
+        function patchHandleFile() {
+          /* script.js stores state in window._state after upload */
+          var _origFetch = window.fetch;
+          /* Instead of patching fetch, hook into the MutationObserver on postUpload */
+          var observer = new MutationObserver(function (mutations) {
+            for (var m of mutations) {
+              if (m.type === 'attributes' && m.attributeName === 'class') {
+                var el = m.target;
+                if (el.id === 'postUpload' && !el.classList.contains('hidden')) {
+                  /* postUpload just became visible — state is ready */
+                  setTimeout(function () {
+                    if (window._state) syncNewKPIs(window._state);
+                  }, 200);
+                }
+              }
+            }
+          });
+          var pu = document.getElementById('postUpload');
+          if (pu) observer.observe(pu, { attributes: true });
+        }
+      })();
+
+      /* ── On load: restore from cached state ── */
+      window.addEventListener('DOMContentLoaded', function () {
+        var cached = window._edaState;
+        if (cached && cached.num_stats) {
+          document.getElementById('no-data-msg').style.display = 'none';
+          document.getElementById('postUpload').classList.remove('hidden');
+          if (window.renderStatsSection) renderStatsSection(cached.num_stats, cached.cat_stats, 'statsContent');
+          if (window.renderInsights) renderInsights(cached.insights || [], 'insightsContent');
+          syncNewKPIs(cached);
+          if (window.renderDashboardCharts) renderDashboardCharts(cached);
+        }
+      });
+    </script>
+</body>
+
+</html>

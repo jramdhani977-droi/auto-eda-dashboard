@@ -1,0 +1,5 @@
+{
+  "python.analysis.exclude": ["venv/**", ".venv/**", "**/__pycache__/**"],
+  "files.exclude": {"venv": true, ".venv": true, "**/__pycache__": true, "**/*.pyc": true},
+  "python.analysis.diagnosticMode": "openFilesOnly"
+}

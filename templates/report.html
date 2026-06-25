@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report — Auto EDA Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="{{ url_for('static', filename='img/logo-itsb.png') }}" class="logo-img" alt="ITSB">
+      <div>
+        <div class="logo-text">Auto EDA</div>
+        <div class="logo-sub">SD-1306 Analytics</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">Navigation</div>
+        <div class="nav-item" onclick="location.href='/'"> Main Dashboard</div>
+        <div class="nav-item" onclick="location.href='/upload-page'"> Upload Data</div>
+        <div class="nav-item" onclick="location.href='/dashboard'"> Analytics</div>
+        <div class="nav-item active"> Report</div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">Final<br></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Report <span>&amp; Export</span></div>
+        <div class="topbar-meta">Data Science Programming · Bakti Siregar, M.Sc.</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── PDF EXPORT ───────────────────────────────────────────── -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-title">Download PDF Report</span>
+          <div class="section-line"></div>
+          <span class="section-tag">EXPORT</span>
+        </div>
+
+        <p style="font-size:12px;color:var(--text2);margin-bottom:18px;">
+          Pilih visualisasi yang ingin ditampilkan dalam laporan PDF, lalu klik Download.
+        </p>
+
+        <!-- ✅ DIGANTI: Chart Selector dinamis dari dataset -->
+        <div id="pdf-chart-selector" style="margin-bottom:20px;"></div>
+
+        <!-- Status bar -->
+        <div id="pdfStatus" style="display:none;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:14px;"></div>
+
+        <!-- Download button -->
+        <button id="btnDownloadPdf" onclick="downloadPDF()"
+          style="background:var(--accent);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.2s;">
+          Download PDF
+        </button>
+        <button onclick="toggleAll(true)" style="margin-left:10px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;font-size:12px;background:var(--surface2);color:var(--text2);cursor:pointer;">
+          Pilih Semua
+        </button>
+        <button onclick="toggleAll(false)" style="margin-left:6px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;font-size:12px;background:var(--surface2);color:var(--text2);cursor:pointer;">
+          Hapus Semua
+        </button>
+      </div>
+
+      <!-- ── OTHER EXPORTS ─────────────────────────────────────────── -->
+      <div class="section" style="margin-top:20px;">
+        <div class="section-header">
+          <span class="section-title">Other Exports</span>
+          <div class="section-line"></div>
+          <span class="section-tag">DATA</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:8px;">
+          <div style="background:var(--surface2);border-radius:10px;padding:20px;text-align:center;border:1px solid var(--border);">
+            <div style="font-size:28px;margin-bottom:8px;">📊</div>
+            <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Export Excel</div>
+            <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Data + summary statistics</div>
+            <button onclick="location.href='/export-excel'"
+              style="background:#059669;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">
+              Download Excel
+            </button>
+          </div>
+          <div style="background:var(--surface2);border-radius:10px;padding:20px;text-align:center;border:1px solid var(--border);">
+            <div style="font-size:28px;margin-bottom:8px;">📄</div>
+            <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Export CSV</div>
+            <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Cleaned data only</div>
+            <button onclick="location.href='/export-csv'"
+              style="background:#2d6a9f;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">
+              Download CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PROJECT PROGRESS ──────────────────────────────────────── -->
+      <div class="section" style="margin-top:20px;">
+        <div class="section-header">
+          <span class="section-title">Project Progress</span>
+          <div class="section-line"></div>
+          <span class="section-tag">ROADMAP</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+          <div style="background:var(--surface2);border-radius:8px;padding:14px 18px;border-left:4px solid #3a9e6f;display:flex;align-items:center;gap:14px;">
+            <span style="font-size:22px;">✅</span>
+            <div>
+              <div style="font-weight:700;color:var(--text);">Meeting 14 — Core Features</div>
+              <div style="font-size:12px;color:var(--text2);">File upload · Data preview · Type detection · Descriptive stats · Basic visualizations</div>
+            </div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:14px 18px;border-left:4px solid var(--accent);display:flex;align-items:center;gap:14px;">
+            <span style="font-size:22px;">✅</span>
+            <div>
+              <div style="font-weight:700;color:var(--text);">Meeting 15 — Advanced Analytics</div>
+              <div style="font-size:12px;color:var(--text2);">Advanced stats · Correlation · Multivariate analysis · AI Insights</div>
+            </div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:14px 18px;border-left:4px solid var(--border);display:flex;align-items:center;gap:14px;">
+            <span style="font-size:22px;">⏳</span>
+            <div>
+              <div style="font-weight:700;color:var(--text);">Meeting 16 — Final Integration</div>
+              <div style="font-size:12px;color:var(--text2);">Time Series · Full reporting · PDF/CSV/Excel export · Final presentation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <style>
+    .chart-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text2);
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .chart-option input[type=checkbox] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .chart-option:hover span {
+      color: var(--accent);
+    }
+  </style>
+
+  <!-- ✅ SCRIPT BARU — ganti seluruh script lama -->
+  <script>
+    let _numCols = [];
+    let _catCols = [];
+
+    // Ambil info kolom dari server
+    fetch('/visualize/info', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => {
+        if (d.error) return;
+        _numCols = d.all_num_cols || [];
+        _catCols = d.all_cat_cols || [];
+        renderPdfSelector();
+      })
+      .catch(() => renderPdfSelector());
+
+    const PDF_SECTIONS = [
+      {
+        id: 'numerical', label: 'Numerical Charts', color: '#2563eb',
+        charts: [
+          { key: 'histogram', label: 'Histogram',    colType: 'num_multi' },
+          { key: 'boxplot',   label: 'Box Plot',     colType: 'num_multi' },
+          { key: 'violin',    label: 'Violin Plot',  colType: 'num_multi' },
+          { key: 'density',   label: 'Density Plot', colType: 'num_multi' },
+          { key: 'qqplot',    label: 'QQ Plot',      colType: 'num_single' },
+        ]
+      },
+      {
+        id: 'categorical', label: 'Categorical Charts', color: '#7c3aed',
+        charts: [
+          { key: 'bar',    label: 'Bar Chart',    colType: 'cat_multi' },
+          { key: 'pie',    label: 'Pie / Donut',  colType: 'cat_multi' },
+          { key: 'pareto', label: 'Pareto Chart', colType: 'cat_multi' },
+        ]
+      },
+      {
+        id: 'bivariate', label: 'Bivariate & Multivariate', color: '#059669',
+        charts: [
+          { key: 'scatter',    label: 'Scatter Plot',        colType: 'num_pair' },
+          { key: 'heatmap',    label: 'Correlation Heatmap', colType: 'num_multi' },
+          { key: 'pairplot',   label: 'Pair Plot',           colType: 'num_multi' },
+          { key: 'regression', label: 'Regression Plot',     colType: 'num_pair' },
+        ]
+      },
+      {
+        id: 'catnum', label: 'Categorical vs Numerical', color: '#d97706',
+        charts: [
+          { key: 'grouped_bar', label: 'Grouped Bar Chart',    colType: 'cat_num' },
+          { key: 'box_by_cat',  label: 'Box Plot by Category', colType: 'cat_num' },
+          { key: 'strip',       label: 'Strip Plot',           colType: 'cat_num' },
+        ]
+      },
+    ];
+
+    function renderPdfSelector() {
+      const container = document.getElementById('pdf-chart-selector');
+      if (!container) return;
+
+      container.innerHTML = PDF_SECTIONS.map(sec => `
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+                    overflow:hidden;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;
+                      border-bottom:1px solid var(--border);cursor:pointer;"
+               onclick="toggleSection('${sec.id}')">
+            <span style="width:8px;height:8px;border-radius:50%;background:${sec.color};
+                         display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;
+                         letter-spacing:0.5px;flex:1;">${sec.label}</span>
+            <span id="badge-${sec.id}" style="font-size:10px;color:var(--text2);
+                  background:var(--surface);border:1px solid var(--border);
+                  border-radius:10px;padding:2px 8px;">0/${sec.charts.length}</span>
+            <button onclick="event.stopPropagation();selectAllSection('${sec.id}', true)"
+              style="font-size:10px;color:${sec.color};background:none;border:none;cursor:pointer;padding:2px 6px;">
+              Pilih semua
+            </button>
+            <button onclick="event.stopPropagation();selectAllSection('${sec.id}', false)"
+              style="font-size:10px;color:var(--text2);background:none;border:none;cursor:pointer;padding:2px 6px;">
+              Hapus
+            </button>
+            <span id="caret-${sec.id}" style="font-size:10px;color:var(--text2);transition:transform 0.2s;">▼</span>
+          </div>
+          <div id="secbody-${sec.id}" style="display:none;">
+            ${sec.charts.map(ch => `
+              <div style="border-bottom:1px solid var(--border);padding:10px 14px;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                  <input type="checkbox" id="chk-${ch.key}" value="${ch.key}"
+                         style="width:14px;height:14px;accent-color:${sec.color};cursor:pointer;"
+                         onchange="onChartToggle('${sec.id}','${ch.key}',this.checked)">
+                  <span style="font-size:12px;color:var(--text2);">${ch.label}</span>
+                </label>
+                <div id="cols-${ch.key}" style="display:none;margin-top:8px;padding-left:22px;">
+                  ${buildColPicker(ch)}
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>`).join('');
+
+      updateAllBadges();
+    }
+
+    function buildColPicker(ch) {
+      const numOpts = _numCols.map(c => `<option value="${c}">${c}</option>`).join('');
+      const catOpts = _catCols.map(c => `<option value="${c}">${c}</option>`).join('');
+      const selStyle = `padding:5px 10px;border:1px solid var(--border);border-radius:6px;
+                        font-size:11px;background:var(--surface);color:var(--text);`;
+
+      if (ch.colType === 'num_multi') {
+        if (!_numCols.length) return '<span style="font-size:11px;color:#9ca3af;">Tidak ada kolom numerik</span>';
+        const opts = _numCols.map((c, i) => `<option value="${c}" ${i < 3 ? 'selected' : ''}>${c}</option>`).join('');
+        return `<label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px;">Kolom numerik:</label>
+                <select id="sel-${ch.key}" multiple
+                  style="${selStyle}min-width:180px;height:${Math.min(_numCols.length, 5) * 22 + 8}px;">
+                  ${opts}
+                </select>
+                <div style="font-size:10px;color:var(--text2);margin-top:3px;">Tahan Ctrl/Cmd untuk pilih lebih dari satu</div>`;
+      }
+
+      if (ch.colType === 'cat_multi') {
+        if (!_catCols.length) return '<span style="font-size:11px;color:#9ca3af;">Tidak ada kolom kategorik</span>';
+        const opts = _catCols.map((c, i) => `<option value="${c}" ${i < 3 ? 'selected' : ''}>${c}</option>`).join('');
+        return `<label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px;">Kolom kategorik:</label>
+                <select id="sel-${ch.key}" multiple
+                  style="${selStyle}min-width:180px;height:${Math.min(_catCols.length, 5) * 22 + 8}px;">
+                  ${opts}
+                </select>
+                <div style="font-size:10px;color:var(--text2);margin-top:3px;">Tahan Ctrl/Cmd untuk pilih lebih dari satu</div>`;
+      }
+
+      if (ch.colType === 'num_single') {
+        if (!_numCols.length) return '<span style="font-size:11px;color:#9ca3af;">Tidak ada kolom numerik</span>';
+        return `<label style="font-size:11px;color:var(--text2);">Kolom:</label>
+                <select id="sel-${ch.key}" style="${selStyle}margin-left:8px;">${numOpts}</select>`;
+      }
+
+      if (ch.colType === 'num_pair') {
+        if (_numCols.length < 2) return '<span style="font-size:11px;color:#9ca3af;">Butuh min. 2 kolom numerik</span>';
+        return `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                  <div>
+                    <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:3px;">Sumbu X</label>
+                    <select id="sel-${ch.key}-x" style="${selStyle}">${numOpts}</select>
+                  </div>
+                  <div>
+                    <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:3px;">Sumbu Y</label>
+                    <select id="sel-${ch.key}-y" style="${selStyle}">
+                      ${_numCols.map((c, i) => `<option value="${c}" ${i === 1 ? 'selected' : ''}>${c}</option>`).join('')}
+                    </select>
+                  </div>
+                </div>`;
+      }
+
+      if (ch.colType === 'cat_num') {
+        if (!_catCols.length || !_numCols.length)
+          return '<span style="font-size:11px;color:#9ca3af;">Butuh kolom kategorik & numerik</span>';
+        return `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                  <div>
+                    <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:3px;">Kolom Kategorik</label>
+                    <select id="sel-${ch.key}-cat" style="${selStyle}">${catOpts}</select>
+                  </div>
+                  <div>
+                    <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:3px;">Kolom Numerik</label>
+                    <select id="sel-${ch.key}-num" style="${selStyle}">${numOpts}</select>
+                  </div>
+                </div>`;
+      }
+
+      return '';
+    }
+
+    function onChartToggle(secId, key, checked) {
+      const colDiv = document.getElementById('cols-' + key);
+      if (colDiv) colDiv.style.display = checked ? 'block' : 'none';
+      updateBadge(secId);
+    }
+
+    function toggleSection(secId) {
+      const body  = document.getElementById('secbody-' + secId);
+      const caret = document.getElementById('caret-' + secId);
+      const open  = body.style.display !== 'none';
+      body.style.display    = open ? 'none' : '';
+      caret.style.transform = open ? 'rotate(-90deg)' : '';
+    }
+
+    function selectAllSection(secId, val) {
+      const sec = PDF_SECTIONS.find(s => s.id === secId);
+      if (!sec) return;
+      sec.charts.forEach(ch => {
+        const chk = document.getElementById('chk-' + ch.key);
+        if (chk) { chk.checked = val; onChartToggle(secId, ch.key, val); }
+      });
+    }
+
+    function updateBadge(secId) {
+      const sec = PDF_SECTIONS.find(s => s.id === secId);
+      if (!sec) return;
+      const count = sec.charts.filter(ch => {
+        const el = document.getElementById('chk-' + ch.key);
+        return el && el.checked;
+      }).length;
+      const badge = document.getElementById('badge-' + secId);
+      if (badge) badge.textContent = `${count}/${sec.charts.length}`;
+    }
+
+    function updateAllBadges() {
+      PDF_SECTIONS.forEach(sec => updateBadge(sec.id));
+    }
+
+    function toggleAll(val) {
+      PDF_SECTIONS.forEach(sec => selectAllSection(sec.id, val));
+    }
+
+    function getColParams() {
+      const params = {};
+      PDF_SECTIONS.forEach(sec => {
+        sec.charts.forEach(ch => {
+          const chk = document.getElementById('chk-' + ch.key);
+          if (!chk || !chk.checked) return;
+          if (ch.colType === 'num_multi' || ch.colType === 'cat_multi') {
+            const sel = document.getElementById('sel-' + ch.key);
+            if (sel) params[ch.key + '_cols'] = Array.from(sel.selectedOptions).map(o => o.value).join(',');
+          } else if (ch.colType === 'num_single') {
+            const sel = document.getElementById('sel-' + ch.key);
+            if (sel) params[ch.key + '_col'] = sel.value;
+          } else if (ch.colType === 'num_pair') {
+            const sx = document.getElementById('sel-' + ch.key + '-x');
+            const sy = document.getElementById('sel-' + ch.key + '-y');
+            if (sx) params[ch.key + '_x'] = sx.value;
+            if (sy) params[ch.key + '_y'] = sy.value;
+          } else if (ch.colType === 'cat_num') {
+            const sc = document.getElementById('sel-' + ch.key + '-cat');
+            const sn = document.getElementById('sel-' + ch.key + '-num');
+            if (sc) params[ch.key + '_cat'] = sc.value;
+            if (sn) params[ch.key + '_num'] = sn.value;
+          }
+        });
+      });
+      return params;
+    }
+
+    function showStatus(msg, type) {
+      const el = document.getElementById('pdfStatus');
+      el.style.display = 'block';
+      el.textContent = msg;
+      const colors = {
+        loading: { bg: '#fff8e1', color: '#855000', border: '#fac775' },
+        success: { bg: '#d6f0e0', color: '#0f4d25', border: '#86efac' },
+        error:   { bg: '#fdecea', color: '#a32d2d', border: '#f09595' },
+      };
+      const c = colors[type] || colors.loading;
+      el.style.background = c.bg;
+      el.style.color      = c.color;
+      el.style.border     = `1px solid ${c.border}`;
+    }
+
+    async function downloadPDF() {
+      const checked = PDF_SECTIONS.flatMap(sec =>
+        sec.charts.filter(ch => {
+          const el = document.getElementById('chk-' + ch.key);
+          return el && el.checked;
+        }).map(ch => ch.key)
+      );
+
+      if (!checked.length) {
+        showStatus('Pilih minimal 1 chart untuk ditampilkan di PDF.', 'error');
+        return;
+      }
+
+      const colParams = getColParams();
+      const btn = document.getElementById('btnDownloadPdf');
+      btn.disabled = true;
+      btn.textContent = 'Generating PDF...';
+      showStatus('Sedang membuat PDF, harap tunggu...', 'loading');
+
+      try {
+        const params = new URLSearchParams({ charts: checked.join(','), ...colParams });
+        const res = await fetch(`/export-pdf?${params.toString()}`);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(err.error || 'Gagal generate PDF');
+        }
+        const blob = await res.blob();
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = 'EDA_Report.pdf'; a.click();
+        URL.revokeObjectURL(url);
+        showStatus('PDF berhasil didownload!', 'success');
+      } catch (e) {
+        showStatus(`Error: ${e.message}`, 'error');
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Download PDF';
+      }
+    }
+  </script>
+
+</body>
+</html>

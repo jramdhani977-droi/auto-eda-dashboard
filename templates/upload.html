@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Data — Auto EDA Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* ===== UPLOAD PAGE CUSTOM STYLES ===== */
+    .up-card {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Mode selector */
+    .mode-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted, #888);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .mode-card {
+      border: 2px solid var(--border, #2a2f3e);
+      border-radius: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all .18s;
+      position: relative;
+    }
+
+    .mode-card.active {
+      border-color: #3a9e6f;
+      background: rgba(58, 158, 111, .07);
+    }
+
+    .mode-card-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--border, #444);
+      background: transparent;
+      display: inline-block;
+      margin-right: 7px;
+      vertical-align: middle;
+      transition: all .18s;
+    }
+
+    .mode-card.active .mode-card-dot {
+      border-color: #3a9e6f;
+      background: #3a9e6f;
+    }
+
+    .mode-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text, #e0e0e0);
+    }
+
+    .mode-card-desc {
+      font-size: 11.5px;
+      color: var(--text-muted, #888);
+      margin-top: 5px;
+      line-height: 1.5;
+      padding-left: 17px;
+    }
+
+    .badge-rec {
+      background: #1a3d2b;
+      color: #4ade80;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+
+    .badge-raw {
+      background: #3d2a00;
+      color: #fbbf24;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+
+    .badge-cust {
+      background: #1e2d4d;
+      color: #93c5fd;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+
+    /* Diagnosis card */
+    .diag-card {
+      border: 1px solid var(--border, #2a2f3e);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .diag-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--card-bg, #1a1f2e);
+      border-bottom: 1px solid var(--border, #2a2f3e);
+    }
+
+    .diag-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .diag-badge-count {
+      background: #c94040;
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .diag-badge-ok {
+      background: #1a3d2b;
+      color: #4ade80;
+      font-size: 11px;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .diag-items {
+      padding: 0;
+    }
+
+    .diag-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border, #1e2330);
+    }
+
+    .diag-item:last-child {
+      border-bottom: none;
+    }
+
+    .diag-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .diag-dot-error {
+      background: #c94040;
+    }
+
+    .diag-dot-warn {
+      background: #d97706;
+    }
+
+    .diag-dot-ok {
+      background: #3a9e6f;
+    }
+
+    .diag-item-body {
+      flex: 1;
+      padding: 0 10px;
+    }
+
+    .diag-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text, #e0e0e0);
+    }
+
+    .diag-item-detail {
+      font-size: 11.5px;
+      color: var(--text-muted, #888);
+      margin-top: 2px;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .diag-item-count {
+      font-size: 12px;
+      color: var(--text-muted, #999);
+      white-space: nowrap;
+    }
+
+    /* Custom cleaning feature panel */
+    .feat-panel {
+      border: 1px solid var(--border, #2a2f3e);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .feat-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 16px;
+      background: var(--card-bg, #1a1f2e);
+      border-bottom: 1px solid var(--border, #2a2f3e);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .feat-panel-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .feat-panel-btn {
+      font-size: 11px;
+      padding: 3px 11px;
+      border: 1px solid var(--border, #2a2f3e);
+      border-radius: 20px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text, #e0e0e0);
+      transition: all .15s;
+    }
+
+    .feat-panel-btn:hover {
+      background: rgba(255, 255, 255, .07);
+    }
+
+    .feat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border, #1e2330);
+    }
+
+    .feat-row:last-child {
+      border-bottom: none;
+    }
+
+    .feat-row-left {
+      flex: 1;
+    }
+
+    .feat-row-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text, #e0e0e0);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feat-count-badge {
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .feat-count-error {
+      background: #3d1a1a;
+      color: #f87171;
+    }
+
+    .feat-count-warn {
+      background: #3d2a00;
+      color: #fbbf24;
+    }
+
+    .feat-count-ok {
+      background: #1a3d2b;
+      color: #4ade80;
+    }
+
+    .feat-row-desc {
+      font-size: 11.5px;
+      color: var(--text-muted, #888);
+      margin-top: 3px;
+    }
+
+    /* Toggle switch */
+    .toggle-sw {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle-sw input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--border, #3a3f4e);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .toggle-track::before {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+    }
+
+    .toggle-sw input:checked+.toggle-track {
+      background: #3a9e6f;
+    }
+
+    .toggle-sw input:checked+.toggle-track::before {
+      transform: translateX(18px);
+    }
+
+    /* Summary bar */
+    .feat-summary-bar {
+      background: rgba(58, 158, 111, .1);
+      border: 1px solid rgba(58, 158, 111, .3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #4ade80;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .feat-summary-bar span {
+      color: var(--text-muted, #999);
+    }
+
+    /* Upload button */
+    .upload-submit-btn {
+      width: 100%;
+      background: #3a9e6f;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s;
+      margin-top: 4px;
+    }
+
+    .upload-submit-btn:hover {
+      background: #2d7d57;
+    }
+
+    .upload-submit-btn:disabled {
+      background: #2a3a30;
+      color: #555;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">EDA</div>
+      <div>
+        <div class="logo-text">Auto EDA</div>
+        <div class="logo-sub">SD-1306 Analytics</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">Navigation</div>
+        <div class="nav-item" onclick="location.href='/'"> Dashboard</div>
+        <div class="nav-item active"> Upload Data</div>
+        <div class="nav-item" onclick="location.href='/dashboard'"> Analytics</div>
+        <div class="nav-item" onclick="location.href='/report'"> Report</div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">Meeting 14 — v1.0.0<br>Flask + Python Backend</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Upload <span>Data</span></div>
+        <div class="topbar-meta">SD-1306 Data Science Programming · Bakti Siregar, M.Sc.</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="section">
+        <div class="section-header">
+          <span class="section-title">Upload Dataset</span>
+          <div class="section-line"></div>
+          <span class="section-tag">SUPPORTED: Excel / CSV / TXT</span>
+        </div>
+
+        <div class="up-card">
+
+          <!-- DROP ZONE -->
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()"
+            ondragover="event.preventDefault();this.classList.add('dragover')"
+            ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+            <div class="upload-icon">[ + ]</div>
+            <div class="upload-title" id="dzTitle">Drop your file here or click to browse</div>
+            <div class="upload-sub">Auto data cleaning · Auto type detection · Preview rows</div>
+            <div class="upload-formats">
+              <span class="format-badge format-xlsx">Excel .xlsx / .xls</span>
+              <span class="format-badge format-csv">CSV .csv</span>
+              <span class="format-badge format-txt">Text .txt</span>
+            </div>
+          </div>
+          <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.txt" onchange="onFileSelected(this.files[0])"
+            style="display:none">
+
+          <div id="diagLoading"
+            style="display:none;text-align:center;padding:14px;color:var(--text-muted);font-size:12px;">
+            ⏳ Menganalisa dataset...
+          </div>
+
+          <!-- HASIL DIAGNOSIS -->
+          <div class="diag-card" id="diagCard">
+            <div class="diag-header">
+              <div class="diag-header-left">
+                🩺 Hasil Diagnosis Dataset
+              </div>
+              <span id="diagBadge"></span>
+            </div>
+            <div class="diag-items" id="diagItems"></div>
+          </div>
+
+          <!-- MODE SELECTOR -->
+          <div id="modeSection" style="display:none;">
+            <div class="mode-label">⊙ MODE DATA</div>
+            <div class="mode-grid">
+              <div class="mode-card active" id="modeCustom" onclick="selectMode('custom')">
+                <div class="mode-card-title">
+                  <span class="mode-card-dot"></span>
+                  Custom Cleaning<span class="badge-rec">RECOMMENDED</span>
+                </div>
+                <div class="mode-card-desc">Pilih fitur cleaning yang kamu mau terapkan.</div>
+              </div>
+              <div class="mode-card" id="modeRaw" onclick="selectMode('raw')">
+                <div class="mode-card-title">
+                  <span class="mode-card-dot"></span>
+                  Data Asli<span class="badge-raw">RAW</span>
+                </div>
+                <div class="mode-card-desc">Gunakan data apa adanya tanpa cleaning apapun.</div>
+              </div>
+            </div>
+
+            <!-- PANEL PILIH FITUR (hanya tampil kalau custom) -->
+            <div class="feat-panel" id="featPanel">
+              <div class="feat-panel-header">
+                ⚙ Pilih Fitur Cleaning
+                <div class="feat-panel-btns">
+                  <button class="feat-panel-btn" onclick="selectAllFeats(true)">Pilih semua</button>
+                  <button class="feat-panel-btn" onclick="selectAllFeats(false)">Reset</button>
+                </div>
+              </div>
+
+              <div class="feat-row">
+                <div class="feat-row-left">
+                  <div class="feat-row-title">
+                    Hapus duplikat
+                    <span class="feat-count-badge feat-count-error" id="badge_remove_duplicates"></span>
+                  </div>
+                  <div class="feat-row-desc">Drop baris yang sama persis</div>
+                </div>
+                <label class="toggle-sw">
+                  <input type="checkbox" id="feat_remove_duplicates" checked onchange="updateSummary()">
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+
+              <div class="feat-row">
+                <div class="feat-row-left">
+                  <div class="feat-row-title">
+                    Isi missing value
+                    <span class="feat-count-badge feat-count-warn" id="badge_impute_missing"></span>
+                  </div>
+                  <div class="feat-row-desc">Numerik → median, Kategorik → modus</div>
+                </div>
+                <label class="toggle-sw">
+                  <input type="checkbox" id="feat_impute_missing" checked onchange="updateSummary()">
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+
+              <div class="feat-row">
+                <div class="feat-row-left">
+                  <div class="feat-row-title">
+                    Perbaiki tipe data
+                    <span class="feat-count-badge feat-count-warn" id="badge_fix_dtypes"></span>
+                  </div>
+                  <div class="feat-row-desc">Auto-detect &amp; konversi tipe kolom</div>
+                </div>
+                <label class="toggle-sw">
+                  <input type="checkbox" id="feat_fix_dtypes" checked onchange="updateSummary()">
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+
+              <div class="feat-row">
+                <div class="feat-row-left">
+                  <div class="feat-row-title">
+                    Cap outlier
+                    <span class="feat-count-badge feat-count-ok" id="badge_cap_outliers"></span>
+                  </div>
+                  <div class="feat-row-desc">Clip nilai ekstrem pakai metode IQR</div>
+                </div>
+                <label class="toggle-sw">
+                  <input type="checkbox" id="feat_cap_outliers" checked onchange="updateSummary()">
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+
+              <div class="feat-row">
+                <div class="feat-row-left">
+                  <div class="feat-row-title">
+                    Drop kolom kosong
+                    <span class="feat-count-badge feat-count-warn" id="badge_drop_empty_cols"></span>
+                  </div>
+                  <div class="feat-row-desc">Hapus kolom yang &gt;80% nilainya kosong</div>
+                </div>
+                <label class="toggle-sw">
+                  <input type="checkbox" id="feat_drop_empty_cols" checked onchange="updateSummary()">
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Summary bar -->
+            <div class="feat-summary-bar" id="featSummary"></div>
+
+            <!-- SUBMIT BUTTON -->
+            <button class="upload-submit-btn" id="submitBtn" onclick="doUpload()">
+              ⬆ Upload &amp; Proses Dataset
+            </button>
+          </div>
+
+          <div id="uploadMsg" style="margin-top:18px;"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    var selectedMode = 'custom';
+    var selectedFile = null;
+    var diagnosisData = null;
+
+    /* ── File selected ── */
+    function onFileSelected(file) {
+      if (!file) return;
+      selectedFile = file;
+      document.getElementById('dzTitle').textContent = '📄 ' + file.name;
+      runDiagnosis(file);
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('uploadZone').classList.remove('dragover');
+      var f = e.dataTransfer.files[0];
+      if (f) onFileSelected(f);
+    }
+
+    /* ── Diagnose ── */
+    function runDiagnosis(file) {
+      document.getElementById('diagLoading').style.display = 'block';
+      document.getElementById('diagCard').style.display = 'none';
+      document.getElementById('modeSection').style.display = 'none';
+      document.getElementById('uploadMsg').innerHTML = '';
+
+      // Kirim file ke /diagnose dulu
+      var fd = new FormData();
+      fd.append('file', file);
+      fetch('/diagnose', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(d => {
+          document.getElementById('diagLoading').style.display = 'none';
+          if (d.error) {
+            document.getElementById('uploadMsg').innerHTML =
+              '<div style="color:#c94040;padding:12px;border-radius:6px;background:#2a1a1a;">' + d.error + '</div>';
+            return;
+          }
+          diagnosisData = d.diagnosis;
+          renderDiagnosis(d.diagnosis);
+          renderFeatureBadges(d.diagnosis.cleaning_features);
+          document.getElementById('modeSection').style.display = 'block';
+          document.getElementById('featPanel').style.display = 'block';
+          updateSummary();
+        })
+        .catch(err => {
+          document.getElementById('diagLoading').style.display = 'none';
+          document.getElementById('uploadMsg').innerHTML =
+            '<div style="color:#c94040;">' + err.message + '</div>';
+        });
+    }
+
+    function renderDiagnosis(diag) {
+      var card = document.getElementById('diagCard');
+      var badge = document.getElementById('diagBadge');
+      var items = document.getElementById('diagItems');
+      card.style.display = 'block';
+
+      if (diag.problem_count > 0) {
+        badge.className = 'diag-badge-count';
+        badge.textContent = diag.problem_count + ' masalah ditemukan';
+      } else {
+        badge.className = 'diag-badge-ok';
+        badge.textContent = 'Dataset bersih ✓';
+      }
+
+      var html = '';
+      diag.issues.forEach(function (issue) {
+        var dotClass = issue.severity === 'error' ? 'diag-dot-error'
+          : issue.severity === 'warning' ? 'diag-dot-warn'
+            : 'diag-dot-ok';
+        html += '<div class="diag-item">'
+          + '<div class="diag-dot ' + dotClass + '"></div>'
+          + '<div class="diag-item-body">'
+          + '<div class="diag-item-title">' + issue.label + '</div>'
+          + '<div class="diag-item-detail">' + issue.detail + '</div>'
+          + '</div>'
+          + '<div class="diag-item-count">' + issue.count_label + '</div>'
+          + '</div>';
+      });
+      items.innerHTML = html;
+    }
+
+    function renderFeatureBadges(features) {
+      function setBadge(id, count) {
+        var el = document.getElementById('badge_' + id);
+        if (!el) return;
+        if (count > 0) {
+          el.textContent = count + (id === 'fix_dtypes' || id === 'drop_empty_cols' ? ' kolom' : id === 'remove_duplicates' ? ' baris' : ' sel');
+          el.style.display = 'inline';
+        } else {
+          el.textContent = 'Aman';
+          el.className = 'feat-count-badge feat-count-ok';
+          el.style.display = 'inline';
+        }
+      }
+      setBadge('remove_duplicates', features.remove_duplicates);
+      setBadge('impute_missing', features.impute_missing);
+      setBadge('fix_dtypes', features.fix_dtypes);
+      setBadge('cap_outliers', features.cap_outliers);
+      setBadge('drop_empty_cols', features.drop_empty_cols);
+    }
+
+    /* ── Mode ── */
+    function selectMode(mode) {
+      selectedMode = mode;
+      document.getElementById('modeCustom').classList.toggle('active', mode === 'custom');
+      document.getElementById('modeRaw').classList.toggle('active', mode === 'raw');
+      document.getElementById('featPanel').style.display = mode === 'custom' ? 'block' : 'none';
+      document.getElementById('featSummary').style.display = mode === 'custom' ? 'flex' : 'none';
+      if (mode === 'custom') updateSummary();
+    }
+
+    /* ── Feature toggles ── */
+    function selectAllFeats(val) {
+      ['remove_duplicates', 'impute_missing', 'fix_dtypes', 'cap_outliers', 'drop_empty_cols'].forEach(function (id) {
+        document.getElementById('feat_' + id).checked = val;
+      });
+      updateSummary();
+    }
+
+    function updateSummary() {
+      var ids = ['remove_duplicates', 'impute_missing', 'fix_dtypes', 'cap_outliers', 'drop_empty_cols'];
+      var checked = ids.filter(function (id) { return document.getElementById('feat_' + id).checked; });
+      var bar = document.getElementById('featSummary');
+      bar.style.display = 'block';
+      if (checked.length === 0) {
+        bar.innerHTML = '⚠ Tidak ada fitur yang dipilih — data tidak akan di-clean.';
+        bar.style.color = '#fbbf24';
+      } else {
+        bar.innerHTML = '✓ <span>' + checked.length + ' fitur cleaning akan diterapkan saat upload.</span>';
+        bar.style.color = '#4ade80';
+      }
+    }
+
+    /* ── Upload ── */
+    function doUpload() {
+      if (!selectedFile) {
+        alert('Pilih file dulu!');
+        return;
+      }
+      var btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Memproses...';
+
+      var fd = new FormData();
+      fd.append('file', selectedFile);
+      fd.append('clean_mode', selectedMode);
+
+      if (selectedMode === 'custom') {
+        ['remove_duplicates', 'impute_missing', 'fix_dtypes', 'cap_outliers', 'drop_empty_cols'].forEach(function (id) {
+          fd.append('feat_' + id, document.getElementById('feat_' + id).checked ? '1' : '0');
+        });
+      }
+
+      var msg = document.getElementById('uploadMsg');
+      fetch('/upload', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(d => {
+          btn.disabled = false;
+          btn.textContent = '⬆ Upload & Proses Dataset';
+          if (d.error) {
+            msg.innerHTML = '<div style="color:#c94040;background:#2a1a1a;padding:12px;border-radius:6px;border:1px solid #c94040;">' + d.error + '</div>';
+            return;
+          }
+          var modeInfo = d.clean_mode === 'raw'
+            ? '<br><span style="color:#fbbf24;font-size:12px;">📂 Mode: Data Asli (tanpa cleaning)</span>'
+            : '<br><span style="color:#4ade80;font-size:12px;">✓ Cleaning diterapkan</span>';
+          msg.innerHTML = '<div style="color:#3a9e6f;background:#0d2b1e;padding:16px;border-radius:8px;border:1px solid #3a9e6f;">'
+            + '<b>✓ Upload sukses!</b><br>'
+            + d.filename + ' · ' + d.total_rows.toLocaleString() + ' rows · ' + d.total_cols + ' columns'
+            + modeInfo
+            + '<br><br><button onclick="location.href=\'/\'" style="background:#3a9e6f;color:#fff;border:none;padding:8px 20px;border-radius:5px;cursor:pointer;font-size:13px;font-weight:700;">Lihat Dashboard →</button></div>';
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.textContent = '⬆ Upload & Proses Dataset';
+          msg.innerHTML = '<div style="color:#c94040;">' + err.message + '</div>';
+        });
+    }
+  </script>
+</body>
+
+</html>

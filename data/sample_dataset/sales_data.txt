@@ -1,0 +1,201 @@
+Date	Product	Category	Region	Sales	Quantity	Discount	Profit
+2023-01-01	USB Hub	Accessories	Bandung	3343267	11	0.24	95216
+2023-01-02	Monitor	Electronics	Bandung	2518005	16	0.04	430283
+2023-01-03	Headset	Electronics	Surabaya	1819448	17	0.07	912863
+2023-01-04	USB Hub	Accessories	Bandung	1978990	4	0.22	124567
+2023-01-05	Keyboard	Accessories	Bandung	3526333	1		769731
+2023-01-06	Headset	Accessories	Bandung	3885685	8	0.19	915422
+2023-01-07	Headset	Peripherals	Jakarta	4062106	17	0.21	534654
+2023-01-08	USB Hub	Accessories	Jakarta	4053282	3	0.16	1167823
+2023-01-09	Mouse	Peripherals	Jakarta	910427	15	0.08	204567
+2023-01-10	Keyboard	Electronics	Surabaya	2724891	15	0.1	158950
+2023-01-11	USB Hub	Peripherals	Makassar	759014	14	0.05	1105874
+2023-01-12	Keyboard	Accessories	Bandung	2972880	14	0.27	768462
+2023-01-13	Keyboard	Electronics		2486887	2	0.18	1048183
+2023-01-14	Headset	Electronics	Surabaya	4494669	13	0.12	680500
+2023-01-15	Monitor	Electronics	Bandung	2079118	14	0.14	407283
+2023-01-16	Keyboard	Peripherals	Jakarta	1026802	19	0.28	1237698
+2023-01-17	Webcam	Accessories	Makassar	1143463	7	0.05	1209153
+2023-01-18	Headset	Electronics	Medan	3926798	3	0.18	1057310
+2023-01-19	Mouse	Electronics	Bandung	3281981	15		444610
+2023-01-20	Monitor	Electronics	Jakarta	955052	14	0.18	905834
+2023-01-21	Webcam	Peripherals	Medan	878481	11	0.01	573412
+2023-01-22	Webcam	Peripherals	Makassar	3654361	15	0.26	182794
+2023-01-23	Mouse	Accessories	Medan	827434	13	0.28	1380105
+2023-01-24	Monitor	Peripherals	Jakarta	4198370	18	0.17	248387
+2023-01-25	Headset	Electronics	Medan	3678090	6	0.21	1427844
+2023-01-26	Laptop	Accessories	Surabaya	866070	3	0.28	696708
+2023-01-27	Monitor	Electronics	Medan	881770	19	0.21	318443
+2023-01-28	Mouse	Electronics	Bandung	4939878	15	0.05	835756
+2023-01-29	Webcam	Peripherals	Bandung	2184219	5	0.17	1315771
+2023-01-30	Headset	Accessories	Surabaya	2167890	10	0.18	1111726
+2023-01-31	Monitor	Peripherals	Jakarta	4157598	7	0.13	1219514
+2023-02-01	Laptop	Peripherals	Bandung	4762619	17	0.22	1005236
+2023-02-02	Laptop	Accessories	Makassar	4937005	7	0.28	1053801
+2023-02-03	Keyboard	Electronics	Bandung	3890202	12	0.28	1281334
+2023-02-04	Keyboard	Electronics	Bandung	2193168	17	0.14	412019
+2023-02-05	USB Hub	Accessories	Jakarta	875753	13	0.03	759666
+2023-02-06	Mouse	Electronics	Medan	3997161	4	0.3	370754
+2023-02-07	Monitor	Accessories	Bandung	3012819	10	0.25	1482119
+2023-02-08	Monitor	Accessories	Surabaya	2408999	3	0.04	1418886
+2023-02-09	USB Hub	Peripherals	Medan	4578595	9	0.28	107169
+2023-02-10	Webcam	Accessories	Makassar	1000389	13	0.26	1073084
+2023-02-11	Webcam	Peripherals	Jakarta	2716813	18	0.16	1391610
+2023-02-12	USB Hub	Electronics	Makassar	551091	15	0.18	311834
+2023-02-13	Webcam	Electronics	Medan	2608973	4	0.12	873521
+2023-02-14	Keyboard	Electronics	Medan	753365	15	0.02	1377458
+2023-02-15	Monitor	Electronics	Medan	1034681	2	0.1	99222
+2023-02-16	USB Hub	Peripherals	Makassar	1028868	15	0.24	1061259
+2023-02-17	Monitor	Electronics	Medan	3421446	8	0.0	481156
+2023-02-18	Laptop	Accessories	Makassar	3857202	8	0.1	1390374
+2023-02-19	Keyboard	Accessories	Medan	3125159	17	0.12	1458034
+2023-02-20	Headset	Accessories	Surabaya	4829776	12	0.16	1419186
+2023-02-21	Keyboard	Peripherals	Medan	2186918	19	0.28	737611
+2023-02-22	USB Hub	Electronics	Makassar	1785704	10	0.1	1299962
+2023-02-23	Headset	Electronics	Bandung	4408696	9	0.1	1274597
+2023-02-24	Laptop	Electronics	Medan	1506181	5	0.22	512696
+2023-02-25	USB Hub	Peripherals	Bandung	4834501	6		1251927
+2023-02-26	Mouse	Accessories	Surabaya	554695	2	0.07	103661
+2023-02-27	Monitor	Accessories	Jakarta	4864455	13	0.14	914591
+2023-02-28	Laptop	Electronics	Surabaya	694220	6	0.04	383513
+2023-03-01	Monitor	Accessories	Medan	4510144	5	0.05	224822
+2023-03-02	Webcam	Accessories	Bandung	2874655	1	0.15	161582
+2023-03-03	Mouse	Peripherals	Bandung	4968342	6	0.13	1059619
+2023-03-04	Mouse	Peripherals	Makassar	832085	6	0.27	542819
+2023-03-05	Laptop	Peripherals	Bandung	2992344	16	0.11	1100912
+2023-03-06	Mouse	Peripherals	Makassar	4861861	4	0.17	144767
+2023-03-07	Headset	Electronics	Jakarta	2853940	11	0.19	507171
+2023-03-08	Mouse	Peripherals	Medan	3332294	9	0.0	832262
+2023-03-09	Monitor	Accessories	Makassar	3630869	3	0.2	1196549
+2023-03-10	Monitor	Electronics	Jakarta	2545435	19	0.05	512191
+2023-03-11	USB Hub	Accessories	Bandung	3324011	8	0.29	957542
+2023-03-12	Monitor	Accessories	Bandung	3129414	5	0.04	1334668
+2023-03-13	USB Hub	Accessories	Jakarta	4555211	4	0.12	943002
+2023-03-14	Monitor	Peripherals	Bandung	704509	6	0.03	387791
+2023-03-15	Headset	Peripherals	Jakarta	1764334	2	0.3	85381
+2023-03-16	USB Hub	Electronics	Makassar	4776852	11	0.15	1311643
+2023-03-17	Keyboard	Electronics	Makassar	4506187	4	0.18	80841
+2023-03-18	Webcam	Peripherals	Jakarta	2550455	15	0.02	1318317
+2023-03-19	Laptop	Accessories	Makassar	3290597	6	0.22	816959
+2023-03-20	Monitor	Electronics	Makassar	1748215	17	0.06	1411648
+2023-03-21	Mouse	Peripherals	Makassar	1346545	6	0.27	1208236
+2023-03-22	Monitor	Peripherals	Surabaya	2586643	19	0.06	1497004
+2023-03-23	Mouse	Peripherals	Medan	2090085	2	0.06	558532
+2023-03-24	Webcam	Accessories	Bandung	3126453	15	0.01	1162423
+2023-03-25	Webcam	Peripherals	Surabaya	849806	11	0.14	632800
+2023-03-26	Webcam	Peripherals	Makassar	4884777	8	0.17	745820
+2023-03-27	Mouse	Peripherals	Jakarta	4937948	19	0.02	959883
+2023-03-28	Monitor	Peripherals	Makassar	3641728	13	0.23	1316832
+2023-03-29	Webcam	Electronics	Medan	2912434	12	0.14	1476921
+2023-03-30	Headset	Electronics	Makassar	1892874	5	0.16	1163996
+2023-03-31	USB Hub	Peripherals	Jakarta	4162078	6	0.13	655762
+2023-04-01	Mouse	Accessories	Medan	3581290	4	0.12	660968
+2023-04-02	Mouse	Electronics	Makassar	1231776	19	0.17	1119494
+2023-04-03	Monitor	Peripherals	Medan	4599172	1	0.05	396227
+2023-04-04	Mouse	Electronics	Bandung	4201418	17	0.05	210187
+2023-04-05	Mouse	Electronics	Bandung	4774100	12	0.26	564202
+2023-04-06	Webcam	Accessories	Makassar	3765738	15	0.28	466497
+2023-04-07	Monitor	Peripherals	Medan	3260368	1	0.11	479647
+2023-04-08	Webcam	Peripherals	Jakarta	2382094	14	0.08	388731
+2023-04-09	USB Hub	Accessories	Makassar	4697278	6	0.19	111035
+2023-04-10	USB Hub	Accessories	Bandung	4397288	5	0.12	75917
+2023-04-11	Webcam	Peripherals	Bandung	703484	11	0.01	1482197
+2023-04-12	USB Hub	Peripherals	Makassar	618651	4	0.05	670271
+2023-04-13	Monitor	Accessories	Medan	2194085	13	0.21	607274
+2023-04-14	Laptop	Electronics	Bandung	4147490	11	0.2	1035489
+2023-04-15	Webcam	Electronics	Medan	4942743	3		366468
+2023-04-16	Headset	Accessories	Bandung	1176876	1	0.07	1427444
+2023-04-17	Headset	Electronics	Bandung	3173588	6	0.07	1190200
+2023-04-18	Mouse	Accessories	Surabaya	2214009	18	0.2	179646
+2023-04-19	USB Hub	Electronics	Bandung	4864615	10	0.01	655492
+2023-04-20	Headset	Electronics	Jakarta	4289535	5	0.03	1324722
+2023-04-21	Mouse	Peripherals	Makassar	4272479	10	0.24	1419861
+2023-04-22	Laptop	Peripherals		2609119	12	0.05	727732
+2023-04-23	Monitor	Electronics	Medan	2366688	2	0.2	939447
+2023-04-24	Monitor	Electronics	Bandung	1730332	13	0.07	292199
+2023-04-25	Monitor	Peripherals	Jakarta	753690	8	0.03	1487195
+2023-04-26	Headset	Peripherals	Medan	4391251	2	0.07	385924
+2023-04-27	Laptop	Peripherals	Surabaya	4158055	1	0.22	1416961
+2023-04-28	Headset	Accessories	Medan	4998730	5	0.26	991988
+2023-04-29	USB Hub	Electronics	Medan	4984866	9	0.25	931218
+2023-04-30	Headset	Peripherals	Bandung	2999443	17	0.12	793398
+2023-05-01	Laptop	Electronics	Surabaya	3960443	9	0.2	384471
+2023-05-02	Laptop	Accessories	Medan	4751446	11	0.06	305966
+2023-05-03	USB Hub	Accessories	Jakarta	4323413	15	0.09	369705
+2023-05-04	Laptop	Peripherals	Jakarta	1613066	6	0.27	320335
+2023-05-05	Laptop	Accessories	Makassar	2527449	3	0.0	1180397
+2023-05-06	Monitor	Electronics	Surabaya	1081217	17	0.03	557682
+2023-05-07	USB Hub	Peripherals	Surabaya	4793230	5	0.06	133872
+2023-05-08	Keyboard	Electronics	Makassar	3227786	12	0.01	1455199
+2023-05-09	Keyboard	Electronics	Medan	1528893	18	0.05	1331490
+2023-05-10	Laptop	Accessories	Surabaya	3522653	14	0.17	1395241
+2023-05-11	Keyboard	Accessories	Jakarta	3281577	11	0.13	1492616
+2023-05-12	Keyboard	Accessories	Jakarta	2111732	9	0.27	302148
+2023-05-13	Laptop	Accessories	Bandung	1011009	2	0.25	624551
+2023-05-14	Keyboard	Accessories	Surabaya	3522079	12	0.1	1149446
+2023-05-15	Headset	Peripherals	Medan	2841385	3	0.08	1059230
+2023-05-16	Mouse	Electronics	Makassar	3975433	3		273149
+2023-05-17	USB Hub	Electronics	Makassar	2840736	1	0.18	1232958
+2023-05-18	Mouse	Electronics	Medan	4334817	8	0.08	375439
+2023-05-19	Laptop	Electronics	Bandung	2983581	8	0.19	374536
+2023-05-20	Monitor	Accessories	Makassar	3024221	11	0.12	828613
+2023-05-21	USB Hub	Electronics	Surabaya	4444941	9	0.17	909763
+2023-05-22	Laptop	Peripherals	Bandung	2315673	5	0.13	891125
+2023-05-23	Monitor	Peripherals	Surabaya	1103069	14	0.09	182656
+2023-05-24	Mouse	Electronics	Jakarta	629522	3	0.28	1322318
+2023-05-25	Laptop	Electronics	Bandung	3898118	5	0.23	435120
+2023-05-26	USB Hub	Peripherals	Makassar	3291393	5	0.04	237797
+2023-05-27	USB Hub	Peripherals	Bandung	3668359	19	0.26	1338685
+2023-05-28	Webcam	Accessories	Bandung	1458339	14	0.15	1435695
+2023-05-29	Headset	Peripherals	Bandung	1113672	4	0.27	1300085
+2023-05-30	Keyboard	Accessories	Bandung	565451	13	0.24	1223798
+2023-05-31	Monitor	Accessories	Surabaya	2077644	10	0.13	1000101
+2023-06-01	Webcam	Accessories	Jakarta	3154630	18	0.01	848743
+2023-06-02	Keyboard	Accessories	Medan	2265098	8	0.08	176131
+2023-06-03	Keyboard	Accessories	Bandung	2468637	8	0.16	642257
+2023-06-04	Laptop	Electronics	Makassar	4568714	7	0.19	590398
+2023-06-05	Keyboard	Peripherals	Bandung	2067150	8	0.08	426643
+2023-06-06	Headset	Accessories	Makassar	2812953	14	0.04	1098959
+2023-06-07	USB Hub	Peripherals	Surabaya	4026439	19	0.25	769020
+2023-06-08	Webcam	Peripherals	Makassar	2284443	6	0.3	167517
+2023-06-09	Keyboard	Accessories	Medan	3299390	1	0.16	369266
+2023-06-10	Laptop	Electronics	Jakarta	4380637	15	0.05	1040725
+2023-06-11	Headset	Accessories	Makassar	4772843	1	0.08	160390
+2023-06-12	Mouse	Electronics	Makassar	1161831	17	0.01	1284250
+2023-06-13	USB Hub	Peripherals	Jakarta	4669644	1	0.27	767962
+2023-06-14	USB Hub	Electronics	Medan	2714523	15	0.04	746851
+2023-06-15	Webcam	Electronics	Bandung	1662100	2	0.17	908991
+2023-06-16	USB Hub	Electronics	Makassar	2566111	14	0.08	1245787
+2023-06-17	Keyboard	Peripherals	Jakarta	4910147	8	0.17	554323
+2023-06-18	Laptop	Peripherals	Surabaya	2716781	8	0.2	1033123
+2023-06-19	USB Hub	Electronics	Jakarta	1979382	19	0.25	870311
+2023-06-20	USB Hub	Electronics		3350304	7	0.06	437191
+2023-06-21	Mouse	Accessories	Medan	1580655	19	0.0	1324013
+2023-06-22	Mouse	Electronics	Bandung	841385	6	0.04	1206268
+2023-06-23	Monitor	Accessories	Jakarta	1079959	6	0.27	1004755
+2023-06-24	Headset	Electronics	Makassar	1076206	3	0.26	1283344
+2023-06-25	Keyboard	Accessories	Medan	1183562	7	0.18	1307577
+2023-06-26	USB Hub	Peripherals	Jakarta	1124722	19	0.18	1077126
+2023-06-27	USB Hub	Electronics	Makassar	3383936	8	0.2	1263669
+2023-06-28	Laptop	Electronics	Jakarta	1318460	10	0.05	1061334
+2023-06-29	Monitor	Electronics	Surabaya	2055503	15	0.27	1036204
+2023-06-30	Headset	Electronics	Jakarta	4535548	15	0.13	946986
+2023-07-01	Monitor	Accessories	Jakarta	2632827	1	0.11	1141439
+2023-07-02	Webcam	Electronics	Jakarta	3504010	7	0.16	279977
+2023-07-03	Headset	Peripherals	Medan	1275439	4	0.01	1327263
+2023-07-04	USB Hub	Peripherals	Jakarta	1365301	6	0.05	1314173
+2023-07-05	USB Hub	Electronics	Makassar	683909	1	0.22	92409
+2023-07-06	Headset	Peripherals	Surabaya	1260208	5	0.02	1247434
+2023-07-07	USB Hub	Electronics	Surabaya	1753657	1	0.18	236861
+2023-07-08	Keyboard	Electronics	Jakarta	1296547	4	0.07	535922
+2023-07-09	Headset	Peripherals	Medan	899161	2	0.12	1128087
+2023-07-10	Monitor	Electronics	Medan	1042861	10	0.09	283102
+2023-07-11	Headset	Peripherals	Makassar	2573504	5	0.11	1236052
+2023-07-12	USB Hub	Accessories	Jakarta	1428502	10	0.22	1256595
+2023-07-13	Keyboard	Electronics	Surabaya	2139214	1	0.09	785828
+2023-07-14	Keyboard	Accessories	Medan	2765378	6	0.17	59260
+2023-07-15	Webcam	Peripherals	Jakarta	3606777	13	0.14	466205
+2023-07-16	Monitor	Accessories	Medan	676905	15	0.2	944544
+2023-07-17	Mouse	Accessories	Medan	4097347	4	0.28	1472720
+2023-07-18	Mouse	Peripherals	Surabaya	3325552	13	0.22	966130
+2023-07-19	Headset	Accessories	Bandung	867916	15	0.06	426715
