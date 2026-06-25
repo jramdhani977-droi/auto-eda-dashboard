@@ -4,6 +4,7 @@ SD-1306 Data Science Programming
 Visualization: Plotly (interactive, lightweight, web-native)
 """
 from flask import Flask, render_template, request, Response, redirect, url_for, session
+from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import json, math, io, warnings, os
@@ -22,6 +23,7 @@ from backend.insight_generator  import generate_basic_insights
 from backend.time_series        import compute_time_series, detect_date_columns
 
 app = Flask(__name__)
+CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 app.secret_key = 'eda_secret_key_2025'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # disable static file caching
@@ -1743,4 +1745,6 @@ def dashboard_charts():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

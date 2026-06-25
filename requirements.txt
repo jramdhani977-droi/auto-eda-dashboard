@@ -5,3 +5,10 @@ openpyxl
 plotly
 scipy
 fpdf2
+gunicorn
+flask-cors
+reportlab
+matplotlib
+seaborn
+xlrd
+kaleido
